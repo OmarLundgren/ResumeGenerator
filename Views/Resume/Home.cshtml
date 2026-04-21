@@ -1,0 +1,14 @@
+﻿@model ResumeGenerator.Models.ResumeVM
+<div>
+    <img src="@Model.Profile.AvatarUrl" alt="avatar" />
+    <h2>@Model.Profile.Name (@Model.Profile.Username)</h2>
+    <p>@Model.Profile.Biography</p>
+</div>
+
+<h3>Repositories</h3>
+<ul>
+    @foreach (var r in Model.Repositories)
+    {
+        <li>@r.Name - @r.Description (★ @r.Stars)</li>
+    }
+</ul>
