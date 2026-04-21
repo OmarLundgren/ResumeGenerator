@@ -50,7 +50,8 @@ namespace ResumeGenerator.Controllers
                 return BadRequest("Failed to retrieve access token");
             }
 
-            return RedirectToAction("Home", "Resume", new {token = token});
+            HttpContext.Session.SetString("GitHubToken", token);
+            return RedirectToAction("Home", "Resume");
             
 
         }
