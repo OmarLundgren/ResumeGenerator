@@ -1,6 +1,6 @@
 ﻿namespace ResumeGenerator.Models
 {
-    public class ResumeVM
+    public class ProfileVM
     {
 
         public GithubProfile Profile { get; set; }

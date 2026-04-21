@@ -1,14 +1,62 @@
-﻿@model ResumeGenerator.Models.ResumeVM
-<div>
-    <img src="@Model.Profile.AvatarUrl" alt="avatar" />
-    <h2>@Model.Profile.Name (@Model.Profile.Username)</h2>
-    <p>@Model.Profile.Biography</p>
-</div>
+﻿@model ResumeGenerator.Models.ProfileVM
+<link rel="stylesheet" href="~/css/Home.css" />
+<main class="resume-container">
+    <section class="profile">
+        @if (Model?.Profile != null)
+        {
+            <div class="profile-row">
+                <div class="profile-inner">
+                    <img class="avatar" src="@Model.Profile.AvatarUrl" alt="avatar" />
+                    <div class="profile-info">
+                        <h2 class="name">@Model.Profile.Name <span class="username">(@Model.Profile.Username)</span></h2>
+                        <p class="bio">@Model.Profile.Biography</p>
+                        <div class="meta">
+                            <span>@Model.Profile.Repos repo(s)</span>
+                            <span>•</span>
+                            <span>@Model.Profile.Followers follower(s)</span>
+                        </div>
+                    </div>
+                </div>
 
-<h3>Repositories</h3>
-<ul>
-    @foreach (var r in Model.Repositories)
-    {
-        <li>@r.Name - @r.Description (★ @r.Stars)</li>
-    }
-</ul>
+                <div class="profile-actions">
+                    <a asp-controller="Resume" asp-action="Resume" class="btn btn-primary">Generera CV</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="profile-inner empty">
+                <p>Ingen profil hittad</p>
+            </div>
+        }
+    </section>
+
+    <section class="repos">
+        <h3>Repositories</h3>
+        @if (Model?.Repositories != null && Model.Repositories.Any())
+        {
+            <ul class="repo-list">
+                @foreach (var r in Model.Repositories)
+                {
+                    <li class="repo-card">
+                        <div class="repo-header">
+                            <strong class="repo-name">@r.Name</strong>
+                            <span class="stars">★ @r.Stars</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(r.Description))
+                        {
+                            <p class="repo-desc">@r.Description</p>
+                        }
+                        <div class="repo-meta">
+                            <span class="language">@r.Language</span>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="no-repos">Inga repositories hittades</div>
+        }
+    </section>
+</main>

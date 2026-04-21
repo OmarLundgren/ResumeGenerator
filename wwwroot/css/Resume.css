@@ -1,0 +1,84 @@
+﻿.resume-paper {
+    background: white;
+    padding: 50px 60px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    min-height: 29.7cm; /* A4 höjd */
+    margin: 20px auto;
+    max-width: 850px;
+    font-family: 'Garamond', 'Georgia', serif;
+    color: #111;
+    line-height: 1.4;
+}
+
+    /* Formatering av HTML-taggarna från Markdig */
+    .resume-paper h1 {
+        text-align: center;
+        font-size: 26pt;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .resume-paper h2 {
+        border-bottom: 1px solid #000;
+        font-size: 14pt;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        font-weight: bold;
+        clear: both;
+    }
+
+    .resume-paper h3 {
+        font-size: 12pt;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    .resume-paper p {
+        margin-bottom: 8px;
+        font-size: 11pt;
+    }
+
+    .resume-paper ul {
+        padding-left: 20px;
+        margin-bottom: 15px;
+    }
+
+    .resume-paper li {
+        margin-bottom: 4px;
+        font-size: 11pt;
+    }
+
+    /* Länkar i CV:t (t.ex. till GitHub-repon) */
+    .resume-paper a {
+        color: #111;
+        text-decoration: none;
+        border-bottom: 1px dotted #666;
+    }
+
+/* CSS för PDF-utskrift */
+@media print {
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .resume-paper {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        min-height: auto;
+    }
+
+    /* Justera marginaler för utskrift */
+    @page {
+        margin: 1.5cm;
+    }
+}

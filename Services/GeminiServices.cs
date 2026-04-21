@@ -30,16 +30,38 @@ namespace ResumeGenerator.Services
                 Instruktioner för CV-format:
                 1. Använd Harvard-standarden: Stilrent, professionellt och fokus på resultat.
                 2. Struktur: Kontaktinformation, Sammanfattning (Professional Summary), Tekniska färdigheter, Projekt (Technical Experience) och Utbildning.
-                3. För varje projekt: Skriv 2-3 punkter (bullet points) som beskriver vad projektet gör, vilka tekniker som användes och dess genomslag (använd stjärnorna som bevis på popularitet).
+                3. För varje projekt: Skriv 2-3 punkter (bullet points) som beskriver vad projektet gör, vilka tekniker som användes och dess genomslag.
                 4. Ton: Formell, handlingsorienterad (använd ord som 'Developed', 'Architected', 'Implemented').
-                5. Språk: Engelska (eftersom det är standard för mjukvaruutvecklare).
+                5. Språk: Engelska (själva CV:t ska vara på engelska).§
+
+                Obs: Det 'språk' som anges är bara GitHubs automatiska gissning baserat på dominerande filtyp. Använd istället projektets namn och beskrivning
+                för att lista ut den faktiska tekniska stacken. Om det till exempel står 'CSS' men beskrivningen nämner 
+                'components', 'hooks' eller 'state management',så är det förmodligen ett React/JavaScript-projekt.
 
                 Svara endast med CV-innehållet i Markdown.";
 
-            var response = await _client.Models.GenerateContentAsync(
-                model: "gemini-3-flash", // Preview-versionen fungerar, men den stabila är ofta snabbare
-                contents: prompt
-            );
+         
+
+            try
+            {
+                var response = await _client.Models.GenerateContentAsync(
+                    model: "gemini-3-flash",
+                    contents: prompt
+                );
+
+                // Hämta texten från det första svaret (Candidate)
+                // I det nya SDK:t kan du oftast skriva response.Text, 
+                // men här är den säkra vägen genom objekthierarkin:
+                var generatedText = response.Candidates[0].Content.Parts[0].Text;
+
+                return generatedText ?? "Kunde inte generera innehåll.";
+            }
+            catch (Exception ex)
+            {
+                // Logga felet (viktigt för API-anrop!)
+                System.Diagnostics.Debug.WriteLine($"Gemini Error: {ex.Message}");
+                return "Ett fel uppstod vid generering av ditt CV. Försök igen senare.";
+            }
         }
 
         public async Task Test()
