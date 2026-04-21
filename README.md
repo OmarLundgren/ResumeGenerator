@@ -1,5 +1,7 @@
-Title: AI GitHub Résumé Architect
+Title: AI Resumé generator
+
 Description:
+
 A full-stack ASP.NET Core application that transforms your GitHub profile into a high-impact professional résumé.
 
 Key Features:
