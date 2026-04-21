@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using NuGet.Common;
+
 using ResumeGenerator.Models;
 using ResumeGenerator.Services;
+using Markdig;
 
 namespace ResumeGenerator.Controllers
 {
@@ -12,7 +12,7 @@ namespace ResumeGenerator.Controllers
     {
         private readonly GithubServices _githubServices;
         private readonly GeminiServices _geminiServices;
-
+    
         public ResumeController(GithubServices githubServices, GeminiServices geminiServices)
         {
             _githubServices = githubServices;
@@ -26,13 +26,18 @@ namespace ResumeGenerator.Controllers
 
         }
 
-        public async Task<IActionResult> Home(string token)
+        public async Task<IActionResult> Home()
         {
+            var token = HttpContext.Session.GetString("GitHubToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Index");
+            }
 
             var profile = await _githubServices.GetProfileAsync(token);
             var repositories = await _githubServices.GetRepositoriesAsync(token);
 
-            var viewModel = new ResumeVM
+            var viewModel = new ProfileVM
             {
                 Profile = profile,
                 Repositories = repositories
@@ -42,12 +47,27 @@ namespace ResumeGenerator.Controllers
             return View(viewModel);
         }
 
-        public async Task<int> Test()
+        public async Task<IActionResult> Resume()
         {
+            var token = HttpContext.Session.GetString("GitHubToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Index");
+            }
 
-            await _geminiServices.Test();
-            return 1;
+            var profile = await _githubServices.GetProfileAsync(token);
+            var repositories = await _githubServices.GetRepositoriesAsync(token);
 
+            var markdownResume = await _geminiServices.GenerateResuméAsync(profile, repositories);
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            var resumeHtml = Markdown.ToHtml(markdownResume, pipeline);
+
+            var resumeModel = new ResumeModel
+            {
+                HtmlContent = resumeHtml
+            };
+            return View(resumeModel);
         }
+
     }
 }
